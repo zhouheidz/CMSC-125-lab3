@@ -229,6 +229,7 @@ public class Lab3 {
 	public static void main(String[] args) {
 		ArrayList jobList = new ArrayList<Job>();
 		ArrayList memoryList = new ArrayList<Memory>();
+		ArrayList memoryList2 = new ArrayList<Memory>();
 
 		BufferedReader br = null;
 		FileReader fr = null;
@@ -287,6 +288,7 @@ public class Lab3 {
 				size = Integer.parseInt(st.nextToken());
 
 				memoryList.add(new Memory(id, size));
+				memoryList2.add(new Memory(id, size));
 			}
 
 		} catch (IOException e) {
@@ -373,9 +375,17 @@ public class Lab3 {
 			switch(cont) {
 				case 'y':
 					running = true;
+					memoryList = new ArrayList<Memory>();
+					for(int i = 0; i < memoryList2.size(); i++) {
+						memoryList.add(((Memory)memoryList2.get(i)));
+					}
 					break;
 				case 'Y':
 					running = true;
+					memoryList = new ArrayList<Memory>();
+					for(int i = 0; i < memoryList2.size(); i++) {
+						memoryList.add(((Memory)memoryList2.get(i)));
+					}
 					break;
 				default:
 					running = false;
