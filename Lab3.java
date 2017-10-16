@@ -261,6 +261,7 @@ public class Lab3 {
 	*/
 	public static void main(String[] args) {
 		ArrayList jobList = new ArrayList<Job>();
+		ArrayList jobList2 = new ArrayList<Job>();
 		ArrayList memoryList = new ArrayList<Memory>();
 		ArrayList memoryList2 = new ArrayList<Memory>();
 
@@ -287,7 +288,7 @@ public class Lab3 {
 				time = Integer.parseInt(st.nextToken());
 				size = Integer.parseInt(st.nextToken());
 
-				jobList.add(new Job(id, time, size));
+				jobList2.add(new Job(id, time, size));
 			}
 
 		} catch (IOException e) {
@@ -320,7 +321,6 @@ public class Lab3 {
 				id = Integer.parseInt(st.nextToken());
 				size = Integer.parseInt(st.nextToken());
 
-				memoryList.add(new Memory(id, size));
 				memoryList2.add(new Memory(id, size));
 			}
 
@@ -342,6 +342,20 @@ public class Lab3 {
 		}
 
 		while(running) {
+
+			jobList = new ArrayList<Job>();
+			for(int i = 0; i < jobList2.size(); i++) {
+				jobList.add(new Job(((Job)jobList2.get(i)).id, 
+					((Job)jobList2.get(i)).time,
+					((Job)jobList2.get(i)).size));
+			}
+
+			memoryList = new ArrayList<Memory>();
+			for(int i = 0; i < memoryList2.size(); i++) {
+				memoryList.add(new Memory(((Memory)memoryList2.get(i)).id, 
+					((Memory)memoryList2.get(i)).size));
+			}
+
 			System.out.println("\033[H\033[2J");
 
 			displayJobs(jobList);
@@ -382,15 +396,12 @@ public class Lab3 {
 
 			switch(option) {
 				case 1:
-					// System.out.println("First-fit");
 					firstFit(jobList, memoryList);
 					break;
 				case 2:
-					// System.out.println("Worst-fit");
 					worstFit(jobList, memoryList);
 					break;
 				case 3:
-					// System.out.println("Best-fit");
 					bestFit(jobList, memoryList);
 					break;
 				default:
@@ -408,17 +419,9 @@ public class Lab3 {
 			switch(cont) {
 				case 'y':
 					running = true;
-					memoryList = new ArrayList<Memory>();
-					for(int i = 0; i < memoryList2.size(); i++) {
-						memoryList.add(((Memory)memoryList2.get(i)));
-					}
 					break;
 				case 'Y':
 					running = true;
-					memoryList = new ArrayList<Memory>();
-					for(int i = 0; i < memoryList2.size(); i++) {
-						memoryList.add(((Memory)memoryList2.get(i)));
-					}
 					break;
 				default:
 					running = false;
