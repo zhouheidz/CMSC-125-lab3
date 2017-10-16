@@ -161,15 +161,16 @@ public class Lab3 {
 	public static void firstFit(ArrayList jobList, ArrayList memoryList) {
 		boolean canrun = true;
 		int timer = 0;
+		int runningjobs;
+		float throughput = 0;
 
 		while(canrun) {
-
+			runningjobs = 0;
 			canrun = false;
 			for(int i = 0; i < jobList.size(); i++) {
 				if(((Job)jobList.get(i)).done == false) {
 					for(int j = 0; j < memoryList.size(); j++) {
-						if(!((Memory)memoryList.get(j)).isoccupied) {
-							if(((Memory)memoryList.get(j)).size > 
+						if(!((Memory)memoryList.get(j)).isoccupied) {							if(((Memory)memoryList.get(j)).size > 
 								((Job)jobList.get(i)).size) {
 								((Memory)memoryList.get(j)).setJob(((Job)jobList.get(i)));
 								((Memory)memoryList.get(j)).setIsoccupied(true);
@@ -182,7 +183,18 @@ public class Lab3 {
 					}
 				}
 			}
+
+			for(int j = 0; j < memoryList.size(); j++) {
+				if(((Memory)memoryList.get(j)).isoccupied) {
+					runningjobs++;
+				}
+			}
+
+			throughput+=runningjobs;
+
 			System.out.println("Timer: " + timer + '\n');
+			System.out.println(runningjobs + " job(s)/ms\n");
+
 			displayRun(memoryList);
 			for(int i = 0; i < memoryList.size(); i++) {
 				if(((Memory)memoryList.get(i)).isoccupied) {
@@ -195,13 +207,18 @@ public class Lab3 {
 			}
 
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(1000);
 			} catch(InterruptedException ex) {
 				//do nothing
 			}
 			System.out.println("\033[H\033[2J");
 			timer++;
 		}
+
+		throughput = throughput/((float)timer);
+		System.out.println("Average throughput: " + throughput + " job(s)/ms");
+		System.out.println();
+
 		displayJobStatus(jobList);
 		try {
 			Thread.sleep(5000);
