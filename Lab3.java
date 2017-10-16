@@ -38,6 +38,20 @@ public class Lab3 {
 		public boolean equals(Object job) {
 			return this.id == ((Job)job).id;
 		}
+
+		/**
+		* This method is used to compare jobs from one another
+		* @param j1, j2, the jobsto be compared
+		* @return Whether j1 > j2.
+		*/
+		public static Comparator<Job> JobComparator = new Comparator<Job>() {
+			public int compare(Job j1, Job j2) {
+				int size1 = j1.size;
+				int size2 = j2.size;
+
+				return size1-size2;
+			}
+		};
 	}
 
 	public static class Memory {
@@ -64,6 +78,20 @@ public class Lab3 {
 		public Job getJob() {
 			return this.job;
 		}
+
+		/**
+		* This method is used to compare memory blocks from one another
+		* @param m1, m2, the memory blocks to be compared
+		* @return Whether m1 > m2.
+		*/
+		public static Comparator<Memory> MemoryComparator = new Comparator<Memory>() {
+			public int compare(Memory m1, Memory m2) {
+				int size1 = m1.size;
+				int size2 = m2.size;
+
+				return size1-size2;
+			}
+		};
 	}
 
 	/**
