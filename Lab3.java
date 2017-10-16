@@ -1,5 +1,6 @@
 import java.util.*;
 import java.io.*;
+import java.text.DecimalFormat;
 
 /**
 * This java program is the 3rd machine problem for our CMSC 125 (Operating Systems)
@@ -111,29 +112,55 @@ public class Lab3 {
 	/**
 	* This method is used to display the running status of the memory
 	* @param memoryList This is the list of memory blocks
-	* @return Nothing.
+	* @return memused Which is the percent of the whole memory being used per ms.
 	*/
-	public static void displayRun(ArrayList memoryList) {
-		System.out.println("Memory Block   |   Job #   |   Time   |   Internal Fragmentation");
-		System.out.println("----------------------------------------------------------------");
+	public static float displayRun(ArrayList memoryList) {
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(2);
+		float percentfrag;
+		float memused = 0;
+
+		System.out.println("Memory Block   |   Job #   |   Time   |   Internal Fragmentation   |   %");
+		System.out.println("------------------------------------------------------------------------------");
 		String job = "";
 		String time = "";
 		String intfrag = "";
+		String intfrag2 = "";
+
+		int job_;
+		int time_;
+		int intfrag_;
+		int intfrag2_;
+
 		for(int i = 0; i < memoryList.size(); i++) {
 			if(((Memory)memoryList.get(i)).job == null) {
 				job = "";
 				time = "";
 				intfrag = "";
+				intfrag2 = "";
 			} else {
-				job = Integer.toString(((Memory)memoryList.get(i)).job.id);
-				time = Integer.toString(((Memory)memoryList.get(i)).job.time);
-				intfrag = Integer.toString((((Memory)memoryList.get(i)).size) -
-					((Job)((Memory)memoryList.get(i)).getJob()).size);
+				job_ = ((Memory)memoryList.get(i)).job.id;
+				time_ = ((Memory)memoryList.get(i)).job.time;
+				intfrag_ = (((Memory)memoryList.get(i)).size) -
+					((Job)((Memory)memoryList.get(i)).getJob()).size;
+
+				job = Integer.toString(job_);
+				time = Integer.toString(time_);
+				intfrag = Integer.toString(intfrag_);
+				percentfrag = ((float)(((Memory)memoryList.get(i)).size) -
+					((float)((Job)((Memory)memoryList.get(i)).getJob()).size)) /
+					(float)(((Memory)memoryList.get(i)).size) * 100;
+				memused+=(float)((Job)((Memory)memoryList.get(i)).getJob()).size;
+				intfrag2 = df.format(percentfrag) + '%';
 			}
 			System.out.println("      " + Integer.toString(((Memory)memoryList.get(i)).id) 
-				+ "            " + job + "            " + time + "            " + 
-				intfrag);
+				+ "            " + job + "            " + time + "              " + 
+				intfrag + "                  " + intfrag2);
 		}	
+
+		memused = (memused / 50000) * 100;
+		System.out.println("\n" + memused + "% memory used");
+		return memused;
 	}
 
 	/**
@@ -159,10 +186,14 @@ public class Lab3 {
 	* @return Nothing.
 	*/
 	public static void firstFit(ArrayList jobList, ArrayList memoryList) {
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(2);
+
 		boolean canrun = true;
 		int timer = 0;
 		int runningjobs;
 		float throughput = 0;
+		float memused = 0;
 
 		while(canrun) {
 			runningjobs = 0;
@@ -193,9 +224,9 @@ public class Lab3 {
 			throughput+=runningjobs;
 
 			System.out.println("Timer: " + timer + '\n');
+			memused += displayRun(memoryList);
 			System.out.println(runningjobs + " job(s)/ms\n");
 
-			displayRun(memoryList);
 			for(int i = 0; i < memoryList.size(); i++) {
 				if(((Memory)memoryList.get(i)).isoccupied) {
 					((Job)((Memory)memoryList.get(i)).getJob()).decTime();
@@ -215,11 +246,15 @@ public class Lab3 {
 			timer++;
 		}
 
+		displayJobStatus(jobList);
+
 		throughput = throughput/((float)timer);
-		System.out.println("Average throughput: " + throughput + " job(s)/ms");
+		memused = memused / timer;
+		System.out.println("\nAverage throughput: " + df.format(throughput) + " job(s)/ms");
+		System.out.println("Average memory usage: " + df.format(memused) + "%");
 		System.out.println();
 
-		displayJobStatus(jobList);
+		
 		try {
 			Thread.sleep(5000);
 		} catch(InterruptedException ex) {
@@ -358,17 +393,17 @@ public class Lab3 {
 
 			System.out.println("\033[H\033[2J");
 
-			displayJobs(jobList);
-			System.out.println();
+			// displayJobs(jobList);
+			// System.out.println();
 
-			for(int i = 0; i < 5; i++) {
-				System.out.println("Displaying memory in " + (5 - i) + " ... ");
-				try {
-					Thread.sleep(500);
-				} catch(InterruptedException ex) {
-					//do nothing
-				}
-			}
+			// for(int i = 0; i < 5; i++) {
+			// 	System.out.println("Displaying memory in " + (5 - i) + " ... ");
+			// 	try {
+			// 		Thread.sleep(500);
+			// 	} catch(InterruptedException ex) {
+			// 		//do nothing
+			// 	}
+			// }
 
 			System.out.println("\033[H\033[2J");
 
