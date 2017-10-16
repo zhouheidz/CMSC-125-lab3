@@ -192,11 +192,14 @@ public class Lab3 {
 		boolean canrun = true;
 		int timer = 0;
 		int runningjobs;
+		int undonejob = 0;
+		float waitingtime = 0;
 		float throughput = 0;
 		float memused = 0;
 
 		while(canrun) {
 			runningjobs = 0;
+			undonejob = 0;
 			canrun = false;
 			for(int i = 0; i < jobList.size(); i++) {
 				if(((Job)jobList.get(i)).done == false) {
@@ -206,12 +209,19 @@ public class Lab3 {
 								((Memory)memoryList.get(j)).setJob(((Job)jobList.get(i)));
 								((Memory)memoryList.get(j)).setIsoccupied(true);
 								((Job)jobList.get(i)).setDone(true);
+								waitingtime+=(float)timer;
 								break;
 							}
 						} else {
 							canrun = true;
 						}
 					}
+				} 
+			}
+
+			for(int i = 0; i < jobList.size(); i++) {
+				if(((Job)jobList.get(i)).done == false) {
+					undonejob++;
 				}
 			}
 
@@ -225,7 +235,8 @@ public class Lab3 {
 
 			System.out.println("Timer: " + timer + '\n');
 			memused += displayRun(memoryList);
-			System.out.println(runningjobs + " job(s)/ms\n");
+			System.out.println(runningjobs + " job(s)/ms");
+			System.out.println(undonejob + " job(s) waiting in queue");
 
 			for(int i = 0; i < memoryList.size(); i++) {
 				if(((Memory)memoryList.get(i)).isoccupied) {
@@ -238,7 +249,7 @@ public class Lab3 {
 			}
 
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(500);
 			} catch(InterruptedException ex) {
 				//do nothing
 			}
@@ -250,8 +261,10 @@ public class Lab3 {
 
 		throughput = throughput/((float)timer);
 		memused = memused / timer;
+		waitingtime = waitingtime / ((float)jobList.size());
 		System.out.println("\nAverage throughput: " + df.format(throughput) + " job(s)/ms");
 		System.out.println("Average memory usage: " + df.format(memused) + "%");
+		System.out.println("Average waiting time: " + df.format(waitingtime) + "ms");
 		System.out.println();
 
 		
@@ -373,7 +386,6 @@ public class Lab3 {
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
-
 		}
 
 		while(running) {
@@ -393,30 +405,15 @@ public class Lab3 {
 
 			System.out.println("\033[H\033[2J");
 
-			// displayJobs(jobList);
-			// System.out.println();
-
-			// for(int i = 0; i < 5; i++) {
-			// 	System.out.println("Displaying memory in " + (5 - i) + " ... ");
-			// 	try {
-			// 		Thread.sleep(500);
-			// 	} catch(InterruptedException ex) {
-			// 		//do nothing
-			// 	}
-			// }
-
-			System.out.println("\033[H\033[2J");
-
-			displayMemory(memoryList);
-			System.out.println();
-
 			System.out.println("Choose: ");
 			System.out.println("1. First-fit");
 			System.out.println("2. Worst-fit");
-			System.out.println("3. Best-fit");
+			System.out.println("3. Best-fit\n");
 
 			s = new Scanner(System.in);
 			int option = s.nextInt();
+
+			System.out.println();
 
 			for(int i = 0; i < 5; i++) {
 				System.out.println("Simulation starting in " + (5 - i) + " ... ");
