@@ -38,20 +38,6 @@ public class Lab3 {
 		public boolean equals(Object job) {
 			return this.id == ((Job)job).id;
 		}
-
-		/**
-		* This method is used to compare jobs from one another
-		* @param j1, j2, the jobsto be compared
-		* @return Whether j1 > j2.
-		*/
-		public static Comparator<Job> JobComparator = new Comparator<Job>() {
-			public int compare(Job j1, Job j2) {
-				int size1 = j1.size;
-				int size2 = j2.size;
-
-				return size1-size2;
-			}
-		};
 	}
 
 	public static class Memory {
@@ -209,7 +195,7 @@ public class Lab3 {
 			}
 
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 			} catch(InterruptedException ex) {
 				//do nothing
 			}
@@ -234,7 +220,8 @@ public class Lab3 {
 	* @return Nothing.
 	*/
 	public static void worstFit(ArrayList jobList, ArrayList memoryList) {
-
+		Collections.sort(memoryList, Memory.MemoryComparator.reversed());
+		firstFit(jobList, memoryList);	
 	}
 
 	/**
@@ -246,7 +233,8 @@ public class Lab3 {
 	* @return Nothing.
 	*/
 	public static void bestFit(ArrayList jobList, ArrayList memoryList) {
-
+		Collections.sort(memoryList, Memory.MemoryComparator);
+		firstFit(jobList, memoryList);
 	}
 
 	/**
