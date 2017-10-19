@@ -79,6 +79,20 @@ public class Lab3 {
 				return size1-size2;
 			}
 		};
+
+		/**
+		* This method is used to resort memory in order
+		* @param m1, m2, the memory blocks to be compared
+		* @return Whether m1 > m2.
+		*/
+		public static Comparator<Memory> MemoryComparator2 = new Comparator<Memory>() {
+			public int compare(Memory m1, Memory m2) {
+				int id1 = m1.id;
+				int id2 = m2.id;
+
+				return id1-id2;
+			}
+		};
 	}
 
 	/**
@@ -115,6 +129,7 @@ public class Lab3 {
 	* @return memused Which is the percent of the whole memory being used per ms.
 	*/
 	public static float displayRun(ArrayList memoryList) {
+		Collections.sort(memoryList, Memory.MemoryComparator2);
 		DecimalFormat df = new DecimalFormat();
 		df.setMaximumFractionDigits(2);
 		float percentfrag;
@@ -158,6 +173,7 @@ public class Lab3 {
 		}	
 
 		memused = (memused / 50000) * 100;
+		System.out.println("---------------------------------------");
 		System.out.println("\n" + memused + "% memory used");
 		return memused;
 	}
@@ -168,12 +184,24 @@ public class Lab3 {
 	* @return Nothing.
 	*/
 	public static void displayJobStatus(ArrayList jobList) {
-		System.out.println("   Job Stream #   |   Processed?");
+		System.out.println("   Job Stream #   |   Status");
 		System.out.println("--------------------------------");
+		boolean isdone;
+		String done;
+		
 		for(int i = 0; i < jobList.size(); i++) {
+			isdone = ((Job)jobList.get(i)).done;
+
+			if(isdone) {
+				done = "DONE";
+			} else {
+				done = "WAITING";
+			}
+
 			System.out.format("\t%s\t\t%s\n", Integer.toString(((Job)jobList.get(i)).id), 
-				((Job)jobList.get(i)).done);
+				done);
 		}
+		System.out.println();
 	}
 
 	/**
@@ -197,6 +225,7 @@ public class Lab3 {
 		float memused = 0;
 
 		while(canrun) {
+			System.out.println("\033[H\033[2J");
 			runningjobs = 0;
 			undonejob = 0;
 			canrun = false;
@@ -231,17 +260,20 @@ public class Lab3 {
 				}
 			}
 
-			throughput+=runningjobs;
+			// throughput+=runningjobs;
 
 			System.out.println("Timer: " + timer + '\n');
 			memused += displayRun(memoryList);
 			System.out.println(runningjobs + " job(s)/ms");
-			System.out.println(undonejob + " job(s) waiting in queue");
+			System.out.println(undonejob + " job(s) waiting in queue\n");
+			System.out.println("---------------------------------------");
+			displayJobStatus(jobList);
 
 			for(int i = 0; i < memoryList.size(); i++) {
 				if(((Memory)memoryList.get(i)).isoccupied) {
 					((Job)((Memory)memoryList.get(i)).getJob()).decTime();
 					if(((Job)((Memory)memoryList.get(i)).getJob()).time == 0) {
+						throughput++;
 						((Memory)memoryList.get(i)).setJob(null);
 						((Memory)memoryList.get(i)).setIsoccupied(false);
 					}
@@ -249,15 +281,13 @@ public class Lab3 {
 			}
 
 			try {
-				Thread.sleep(500);
+				Thread.sleep(1000);
 			} catch(InterruptedException ex) {
 				//do nothing
 			}
-			System.out.println("\033[H\033[2J");
+			
 			timer++;
 		}
-
-		displayJobStatus(jobList);
 
 		throughput = throughput/((float)timer);
 		memused = memused / timer;
@@ -269,7 +299,7 @@ public class Lab3 {
 
 		
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 		} catch(InterruptedException ex) {
 			//do nothing
 		}
