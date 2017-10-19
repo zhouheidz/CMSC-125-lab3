@@ -204,7 +204,8 @@ public class Lab3 {
 			for(int i = 0; i < jobList.size(); i++) {
 				if(((Job)jobList.get(i)).done == false) {
 					for(int j = 0; j < memoryList.size(); j++) {
-						if(!((Memory)memoryList.get(j)).isoccupied) {							if(((Memory)memoryList.get(j)).size > 
+						if(!((Memory)memoryList.get(j)).isoccupied) {							
+							if(((Memory)memoryList.get(j)).size > 
 								((Job)jobList.get(i)).size) {
 								((Memory)memoryList.get(j)).setJob(((Job)jobList.get(i)));
 								((Memory)memoryList.get(j)).setIsoccupied(true);
