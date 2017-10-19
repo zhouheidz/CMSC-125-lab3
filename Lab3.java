@@ -120,8 +120,10 @@ public class Lab3 {
 		float percentfrag;
 		float memused = 0;
 
-		System.out.println("Memory Block   |   Job #   |   Time   |   Internal Fragmentation   |   %");
-		System.out.println("------------------------------------------------------------------------------");
+		String format = "\t%\t\t%\t\t%\t\t%\t\t\t%";
+
+		System.out.println("Memory Block      |    Job #   |      Time      |    Internal Fragmentation    |   %");
+		System.out.println("----------------------------------------------------------------------------------------");
 		String job = "";
 		String time = "";
 		String intfrag = "";
@@ -153,9 +155,11 @@ public class Lab3 {
 				memused+=(float)((Job)((Memory)memoryList.get(i)).getJob()).size;
 				intfrag2 = df.format(percentfrag) + '%';
 			}
-			System.out.println("      " + Integer.toString(((Memory)memoryList.get(i)).id) 
-				+ "            " + job + "            " + time + "              " + 
-				intfrag + "                  " + intfrag2);
+			// System.out.println("      " + Integer.toString(((Memory)memoryList.get(i)).id) 
+			// 	+ "            " + job + "            " + time + "              " + 
+			// 	intfrag + "                  " + intfrag2);
+			System.out.format("\t%s\t\t%s\t\t%s\t\t\t%s\t\t  %s\n", 
+				Integer.toString(((Memory)memoryList.get(i)).id), job, time, intfrag, intfrag2);
 		}	
 
 		memused = (memused / 50000) * 100;
@@ -169,10 +173,10 @@ public class Lab3 {
 	* @return Nothing.
 	*/
 	public static void displayJobStatus(ArrayList jobList) {
-		System.out.println("Job Stream #   |   Processed?");
-		System.out.println("-----------------------------");
+		System.out.println("   Job Stream #   |   Processed?");
+		System.out.println("--------------------------------");
 		for(int i = 0; i < jobList.size(); i++) {
-			System.out.println("      " + Integer.toString(((Job)jobList.get(i)).id) + "             " + 
+			System.out.format("\t%s\t\t%s\n", Integer.toString(((Job)jobList.get(i)).id), 
 				((Job)jobList.get(i)).done);
 		}
 	}
