@@ -120,8 +120,6 @@ public class Lab3 {
 		float percentfrag;
 		float memused = 0;
 
-		String format = "\t%\t\t%\t\t%\t\t%\t\t\t%";
-
 		System.out.println("Memory Block      |    Job #   |      Time      |    Internal Fragmentation    |   %");
 		System.out.println("----------------------------------------------------------------------------------------");
 		String job = "";
@@ -155,9 +153,6 @@ public class Lab3 {
 				memused+=(float)((Job)((Memory)memoryList.get(i)).getJob()).size;
 				intfrag2 = df.format(percentfrag) + '%';
 			}
-			// System.out.println("      " + Integer.toString(((Memory)memoryList.get(i)).id) 
-			// 	+ "            " + job + "            " + time + "              " + 
-			// 	intfrag + "                  " + intfrag2);
 			System.out.format("\t%s\t\t%s\t\t%s\t\t\t%s\t\t  %s\n", 
 				Integer.toString(((Memory)memoryList.get(i)).id), job, time, intfrag, intfrag2);
 		}	
